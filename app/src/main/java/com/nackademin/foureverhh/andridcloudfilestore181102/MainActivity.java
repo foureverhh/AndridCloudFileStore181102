@@ -35,10 +35,37 @@ public class MainActivity extends AppCompatActivity {
         textView2 = findViewById(R.id.text2);
         textView3 = findViewById(R.id.text3);
 
+        //WRITE AND READ DATA
         //addNewContact();
         readSingleContact();
         readAllContacts();
         readSingleContactCustomObject();
+
+         //UPDATE DATA 
+         updateData();
+
+
+
+
+
+
+    }
+
+    private void updateData() {
+        //Get Document
+        DocumentReference contact = db.collection("AddressBook").document("1");
+        contact.update("name","EddyLee").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(MainActivity.this,"Update",Toast.LENGTH_LONG).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Error",e.getMessage());
+            }
+        });
     }
 
     private void readSingleContactCustomObject() {
