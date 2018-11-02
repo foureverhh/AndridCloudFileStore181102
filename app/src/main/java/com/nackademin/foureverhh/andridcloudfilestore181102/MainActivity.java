@@ -44,11 +44,21 @@ public class MainActivity extends AppCompatActivity {
          //UPDATE DATA 
          updateData();
 
+         //DELETE DATA
+         deleteData();
 
 
 
 
+    }
 
+    private void deleteData() {
+        db.collection("AddressBook").document("1").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                   Toast.makeText(MainActivity.this,"Delete",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void updateData() {
@@ -75,11 +85,18 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 AddressBook addressBook = documentSnapshot.toObject(AddressBook.class);
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("Name is:"+addressBook.getName());
+                if (addressBook != null) {
+                    stringBuilder.append("Name is:"+addressBook.getName());
+                }
                 stringBuilder.append("\n");
-                stringBuilder.append("Phone is:"+addressBook.getPhone());
+
+                if (addressBook != null) {
+                    stringBuilder.append("Phone is:"+addressBook.getPhone());
+                }
                 stringBuilder.append("\n");
-                stringBuilder.append("Email is:"+addressBook.getEmail());
+                if (addressBook != null) {
+                    stringBuilder.append("Email is:"+addressBook.getEmail());
+                }
                 stringBuilder.append("\n");
                 textView3.setText(stringBuilder.toString());
             }
