@@ -13,12 +13,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
@@ -36,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         textView3 = findViewById(R.id.text3);
 
         //WRITE AND READ DATA
-        //addNewContact();
+        addNewContact();
         readSingleContact();
         readAllContacts();
         readSingleContactCustomObject();
@@ -45,11 +49,28 @@ public class MainActivity extends AppCompatActivity {
          updateData();
 
          //DELETE DATA
-         deleteData();
+        // deleteData();
+
+        //Add real_time update to AddressBook
+        addRealTimeUpdate();
 
 
 
+    }
 
+    private void addRealTimeUpdate() {
+        DocumentReference contactListen = db.collection("AddressBook").document("1");
+        contactListen.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e("ERROR",e.getMessage());
+                }
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                   Toast.makeText(MainActivity.this,"Current data is: "+ documentSnapshot.getData(),Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void deleteData() {
